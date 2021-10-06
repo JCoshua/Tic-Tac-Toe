@@ -6,7 +6,8 @@ namespace Tic_Tac_Toe
 {
     class Game
     {
-        public static bool _gameOver;
+        private static bool _gameOver = false;
+        private static int _currentSceneIndex = 1;
         private Board _gameBoard = new Board();
 
         /// <summary>
@@ -16,7 +17,7 @@ namespace Tic_Tac_Toe
         {
             Start();
 
-            while(!_gameOver)
+            while (!_gameOver)
             {
                 Draw();
                 Update();
@@ -38,7 +39,16 @@ namespace Tic_Tac_Toe
         /// </summary>
         private void Update()
         {
-            _gameBoard.Update();
+            switch (_currentSceneIndex)
+            {
+                case 1:
+                    _gameBoard.Update();
+                    break;
+                case 2:
+                    RestartScreen();
+                    break;
+            }
+
         }
 
         /// <summary>
@@ -64,10 +74,36 @@ namespace Tic_Tac_Toe
             while (choice == -1)
             {
                 if (!int.TryParse(Console.ReadLine(), out choice))
+                {
+                    Console.WriteLine("Invalid Input");
+                    Console.ReadKey(true);
                     choice = -1;
+                }
             }
-
             return choice;
+        }
+
+        public static void EndApplication()
+        {
+            _gameOver = true;
+        }
+
+        public static void SetScene(int index)
+        {
+            _currentSceneIndex = index;
+        }
+
+        public void RestartScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("Do you want to play again\n" +
+                "1. Yes\n2. No\n");
+            int input = GetInput();
+            if (input == 1)
+                SetScene(1);
+                _gameBoard.ClearBoard();
+            if (input == 2)
+                Game.EndApplication();
         }
     }
 }
