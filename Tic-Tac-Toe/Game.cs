@@ -6,7 +6,7 @@ namespace Tic_Tac_Toe
 {
     class Game
     {
-        private static bool _gameOver;
+        public static bool _gameOver;
         private Board _gameBoard = new Board();
 
         /// <summary>
@@ -61,12 +61,11 @@ namespace Tic_Tac_Toe
         public static int GetInput()
         {
             int choice = -1;
-            while(choice == -1)
+            while (choice == -1)
             {
                 if (!int.TryParse(Console.ReadLine(), out choice))
                     choice = -1;
             }
-            
 
             return choice;
         }

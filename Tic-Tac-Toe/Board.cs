@@ -18,8 +18,7 @@ namespace Tic_Tac_Toe
         {
             _player1token = 'x';
             _player2token = 'o';
-            _currentToken = _player1token;
-            _board = new char[3, 3] { { '1', '2', '3' }, { '4', '5', '6' }, { '7', '8', '9' } };
+            ClearBoard();
         }
 
         /// <summary>
@@ -30,10 +29,30 @@ namespace Tic_Tac_Toe
         /// </summary>
         public void Update()
         {
-            if (_currentToken == _player1token)
-                _currentToken = _player2token;
+            //Gets the player's input
+            int input = Game.GetInput();
+
+            //Checks if token can be set at the input, then if true, sets the token
+            if (!SetToken(_currentToken, (input - 1) / 3, (input - 1) % 3))
+                //returns if false
+                return;
+
+            //Checks for winner
+            if (CheckWinner(_currentToken))
+            {
+                Console.ReadKey(true);
+                RestartScreen();
+                return;
+            }
             else
-                _currentToken = _player1token;
+            {
+                //Changes the player
+                if (_currentToken == _player1token)
+                    _currentToken = _player2token;
+                else
+                    _currentToken = _player1token;
+            }
+
             Console.ReadKey(true);
         }
 
@@ -53,7 +72,7 @@ namespace Tic_Tac_Toe
 
         public void End()
         {
-
+            Console.WriteLine("One of you did very well today.");
         }
 
         /// <summary>
@@ -65,10 +84,19 @@ namespace Tic_Tac_Toe
         /// <returns>Returns False if the indices are out of range</returns>
         public bool SetToken(char token, int posX, int posY)
         {
+            //Checks the bounds
             if (posX > _board.GetLength(0))
                 return false;
             if (posY > _board.GetLength(1))
                 return false;
+
+            //Checks if player is placing if a open position
+            if (_board[posX, posY] == 'x' || _board[posX, posY] == 'o')
+            {
+                Console.WriteLine("You cannot place there.");
+                Console.ReadKey(true);
+                return false;
+            }
 
             _board[posX, posY] = token;
             return true;
@@ -77,16 +105,84 @@ namespace Tic_Tac_Toe
         /// <summary>
         /// Check to see if a player has won
         /// </summary>
-        /// /// <param name="token"></param>
+        /// /// <param name="token">The current player</param>
         /// <returns></returns>
-        private bool CheckWinner(char token)
+        public bool CheckWinner(char token)
+        
         {
-            return false;
+            //Checks if player wins
+            if (_board[0,0] == token && _board[0, 1] == token && _board[0, 2] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else if (_board[1, 0] == token && _board[1, 1] == token && _board[1, 2] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else if (_board[2, 0] == token && _board[2, 1] == token && _board[2, 2] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else if (_board[0, 0] == token && _board[1, 0] == token && _board[2, 0] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else if (_board[0, 1] == token && _board[1, 1] == token && _board[2, 1] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else if (_board[0, 2] == token && _board[1, 2] == token && _board[1, 2] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else if (_board[0, 0] == token && _board[1, 1] == token && _board[2, 2] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else if (_board[0, 2] == token && _board[1, 1] == token && _board[2, 0] == token)
+            {
+                Console.WriteLine(token + " wins!");
+                return true;
+            }
+            else
+            //Checks for draw
+            for (int i = 0; i < _board.GetLength(0); i++)
+                for(int j = 0; j < _board.GetLength(1); j++)
+                {
+                    if (_board[i, j] != 'x' && _board[i, j] != 'o')
+                        return false;
+                }
+            Console.WriteLine("Its a draw");
+            return true;
         }
 
-        private void ClearBoard()
+        /// <summary>
+        /// Clears the board for a new game
+        /// </summary>
+        public void ClearBoard()
         {
+            _currentToken = _player1token;
+            _board = new char[3, 3] { { '1', '2', '3' }, { '4', '5', '6' }, { '7', '8', '9' } };
+        }
 
+
+        public void RestartScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("Do you want to play again\n" +
+                "1. Yes\n2. No\n");
+            int input = Game.GetInput();
+            if (input == 1)
+                ClearBoard();
+            if (input == 2)
+                Game._gameOver = true;
         }
     }
 }
