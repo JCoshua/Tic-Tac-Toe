@@ -64,20 +64,26 @@ namespace Tic_Tac_Toe
         /// </summary>
         public void Draw()
         {
-            Console.WriteLine("Its " + _currentToken + "'s Turn.");
             Console.WriteLine(_board[0, 0] + "|" + _board[0, 1] + "|" + _board[0, 2] + "\n" +
                               "------\n" +
                               _board[1, 0] + "|" + _board[1, 1] + "|" + _board[1, 2] + "\n" +
                               "------\n" +
                               _board[2, 0] + "|" + _board[2, 1] + "|" + _board[2, 2] + "\n");
+            //If a player wins
             if (CheckWinner(_currentToken))
             {
+                //Display the restart menu
                 Console.ReadKey(true);
                 Game.SetScene(2);
                 return;
             }
+            else
+                Console.WriteLine("\nIts " + _currentToken + "'s Turn.");
         }
 
+        /// <summary>
+        /// The End Screen displayed before the application closes
+        /// </summary>
         public void End()
         {
             Console.WriteLine("One of you did very well today.");
@@ -92,7 +98,7 @@ namespace Tic_Tac_Toe
         /// <returns>Returns False if the indices are out of range</returns>
         public bool SetToken(char token, int posX, int posY)
         {
-            //Checks the bounds
+            //Checks if position is within the bounds
             if (posX > _board.GetLength(0) || posX < 0)
                 return false;
             if (posY > _board.GetLength(1) || posX < 0)
@@ -106,6 +112,7 @@ namespace Tic_Tac_Toe
                 return false;
             }
 
+            //Places the token on the board
             _board[posX, posY] = token;
             return true;
         }
@@ -117,60 +124,109 @@ namespace Tic_Tac_Toe
         /// <returns></returns>
         public bool CheckWinner(char token)
         {
-            int matchCount;
-            //Check if the player wins horizontally
-            for (int i = 0; i < _board.GetLength(0); i++)
+           //The Super Loop
+           //Checks if the current player wins
+            for (int i = 0; i < 3; i++)
             {
-                matchCount = 0;
-                for (int j = 0; j < _board.GetLength(1); j++)
+                //Break Checks
+                bool horizontalBreak = false;
+                bool verticalBreak = false;
+                bool diagonalBreak = false;
+                bool reverseDiagonalBreak = false;
+                //Token Counters
+                int verticalCount = 0;
+                int horizontalCount = 0;
+                int diagonalCount = 0;
+                int reverseDiagonalCount = 0;
+                //The value to check the reverse Diagonal
+                int reversej = 2;
+                
+                for (int j = 0; j < 3; j++)
                 {
-                    if (_board[i, j] == token)
-                        matchCount++;
-                    else
+
+                    //Check if the player wins horizontally
+                    //If the horizontal check has not broken
+                    if (!horizontalBreak)
+                    {
+                        //If the spot has the Player's token
+                        if (_board[i, j] == token)
+                            //increment the counter
+                            horizontalCount++;
+                        else
+                            //break the Check
+                            horizontalBreak = true;
+                    }
+
+
+                    //Check if the player wins vertically
+                    //If the vertical check has not broken
+                    if (!verticalBreak)
+                    {
+                        //If the spot has the Player's token
+                        if (_board[j, i] == token)
+                            //increment the counter
+                            verticalCount++;
+                        else
+                            //break the Check
+                            verticalBreak = true;
+                    }
+
+
+                    //Check if the player wins diagonally
+                    //If the diagonal check has not broken
+                    if (!diagonalBreak)
+                    {
+                        //If the spot has the Player's token
+                        if (_board[j, j] == token)
+                            //increment the counter
+                            diagonalCount++;
+                        else
+                            //Break the Check
+                            diagonalBreak = true;
+                    }
+
+
+                    //Check if the player wins backwards diagonally
+                    //If the backwards diagonal check has not broken
+                    if (!reverseDiagonalBreak)
+                    {
+                        if (_board[j, reversej] == token)
+                        {
+                            //increment the counter
+                            reverseDiagonalCount++;
+                            //decrement the reversej value
+                            reversej--;
+                        }
+                        else
+                            //break the Check
+                            reverseDiagonalBreak = true;
+                    }
+                    
+
+                    //if all breaks are true
+                    if (horizontalBreak == true && verticalBreak == true && diagonalBreak == true && reverseDiagonalBreak == true)
+                        //break the loop
                         break;
                 }
-                if (matchCount == 3)
+
+                //If there was a 3-in-a-row
+                if (horizontalCount == 3 || verticalCount == 3 || diagonalCount == 3 || reverseDiagonalCount == 3)
                 {
+                    //The player wins
                     Console.WriteLine(token + " wins!");
                     return true;
                 }
             }
 
-            //Check if the player wins vertically
-            for (int i = 0; i < _board.GetLength(1); i++)
-            {
-                matchCount = 0;
-                for (int j = 0; j < _board.GetLength(0); j++)
-                {
-                    if (_board[j, i] == token)
-                        matchCount++;
-                    else
-                        break;
-                }
-                if (matchCount == 3)
-                {
-                    Console.WriteLine(token + " wins!");
-                    return true;
-                }
-            }
-
-            //Checks if player wins diagonally
-            if (_board[0, 0] == token && _board[1, 1] == token && _board[2, 2] == token)
-            {
-                Console.WriteLine(token + " wins!");
-                return true;
-            }
-            else if (_board[0, 2] == token && _board[1, 1] == token && _board[2, 0] == token)
-            {
-                Console.WriteLine(token + " wins!");
-                return true;
-            }
-
+            //If the current turn is ten
             if(_currentTurn == 10)
             {
+                //End in a Draw
                 Console.WriteLine("Its a draw");
                 return true;
             }
+
+            //IF none of the above are true, return false
             return false;
         }
 

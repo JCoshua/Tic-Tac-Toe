@@ -68,9 +68,14 @@ namespace Tic_Tac_Toe
             _gameBoard.End();
         }
 
+        /// <summary>
+        /// A function to get the input of the player
+        /// </summary>
+        /// <returns>The player's choice</returns>
         public static int GetInput()
         {
             int choice = -1;
+            //Loops while the player does not have a valid input
             while (choice == -1)
             {
                 if (!int.TryParse(Console.ReadLine(), out choice))
@@ -83,26 +88,43 @@ namespace Tic_Tac_Toe
             return choice;
         }
 
+        /// <summary>
+        /// A function to end the Application
+        /// </summary>
         public static void EndApplication()
         {
             _gameOver = true;
         }
 
+        /// <summary>
+        /// Sets the Games Scene
+        /// </summary>
+        /// <param name="index">The desired scene</param>
         public static void SetScene(int index)
         {
+            //Sets the current screen to the desired scene
             _currentSceneIndex = index;
         }
 
+        /// <summary>
+        /// The Restart Screen
+        /// </summary>
         public void RestartScreen()
         {
             Console.Clear();
             Console.WriteLine("Do you want to play again\n" +
                 "1. Yes\n2. No\n");
             int input = GetInput();
+            //IF Yes
             if (input == 1)
+            {
+                //Start a new game
                 SetScene(1);
                 _gameBoard.ClearBoard();
-            if (input == 2)
+            }
+            //If no
+            else if (input == 2)
+                //End Game
                 Game.EndApplication();
         }
     }
