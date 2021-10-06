@@ -117,38 +117,45 @@ namespace Tic_Tac_Toe
         /// <returns></returns>
         public bool CheckWinner(char token)
         {
-            //Checks if player wins
-            if (_board[0, 0] == token && _board[0, 1] == token && _board[0, 2] == token)
+            int matchCount;
+            //Check if the player wins horizontally
+            for (int i = 0; i < _board.GetLength(0); i++)
             {
-                Console.WriteLine(token + " wins!");
-                return true;
+                matchCount = 0;
+                for (int j = 0; j < _board.GetLength(1); j++)
+                {
+                    if (_board[i, j] == token)
+                        matchCount++;
+                    else
+                        break;
+                }
+                if (matchCount == 3)
+                {
+                    Console.WriteLine(token + " wins!");
+                    return true;
+                }
             }
-            else if (_board[1, 0] == token && _board[1, 1] == token && _board[1, 2] == token)
+
+            //Check if the player wins vertically
+            for (int i = 0; i < _board.GetLength(1); i++)
             {
-                Console.WriteLine(token + " wins!");
-                return true;
+                matchCount = 0;
+                for (int j = 0; j < _board.GetLength(0); j++)
+                {
+                    if (_board[j, i] == token)
+                        matchCount++;
+                    else
+                        break;
+                }
+                if (matchCount == 3)
+                {
+                    Console.WriteLine(token + " wins!");
+                    return true;
+                }
             }
-            else if (_board[2, 0] == token && _board[2, 1] == token && _board[2, 2] == token)
-            {
-                Console.WriteLine(token + " wins!");
-                return true;
-            }
-            else if (_board[0, 0] == token && _board[1, 0] == token && _board[2, 0] == token)
-            {
-                Console.WriteLine(token + " wins!");
-                return true;
-            }
-            else if (_board[0, 1] == token && _board[1, 1] == token && _board[2, 1] == token)
-            {
-                Console.WriteLine(token + " wins!");
-                return true;
-            }
-            else if (_board[0, 2] == token && _board[1, 2] == token && _board[1, 2] == token)
-            {
-                Console.WriteLine(token + " wins!");
-                return true;
-            }
-            else if (_board[0, 0] == token && _board[1, 1] == token && _board[2, 2] == token)
+
+            //Checks if player wins diagonally
+            if (_board[0, 0] == token && _board[1, 1] == token && _board[2, 2] == token)
             {
                 Console.WriteLine(token + " wins!");
                 return true;
